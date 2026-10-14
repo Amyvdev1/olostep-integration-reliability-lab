@@ -9,9 +9,11 @@ partial results, and export the evidence. Not an official Olostep project or SDK
 ## Five-minute quickstart
 
 Requires **Python 3.11+**. No third-party Python packages, credentials, or external
-requests are needed for the offline workflow. Run commands from this directory.
+requests are needed for the offline workflow. Git and internet access are needed only to clone the repository. Start in a new working folder:
 
 ```sh
+git clone https://github.com/Amyvdev1/olostep-integration-reliability-lab.git
+cd olostep-integration-reliability-lab
 python -m unittest discover -s tests -v
 python -m lab --scenario partial
 python -m lab --serve
@@ -20,6 +22,18 @@ python -m lab --serve
 Open **http://127.0.0.1:8765** and choose **Guided walkthrough**. The console executes
 the same runner as the CLI. Expect two completed items, one failed item, an overall
 `partial` result, and `null` credits. CLI evidence is in `output/latest/`.
+
+Use `python3` if your system names Python that way. Expect the test run to end with `OK`. The offline commands do not need `OLOSTEP_API_KEY` and cannot spend credits. Leave the server terminal open while exploring, then stop it with Ctrl+C.
+
+### Read the result before moving on
+
+| Observation | Interpretation | Next action |
+| --- | --- | --- |
+| `partial`, two completed and one failed item | The workflow finished, but the dataset is incomplete. | Inspect per-item outcomes in the exported report. |
+| `null` credits | Usage was not measured in this offline fixture. | Keep it unknown; do not interpret it as zero cost. |
+| Exit code 2 on the timeout scenario | The bounded workflow stopped with incomplete evidence. | Resume from the checkpoint below instead of creating another batch. |
+
+If port 8765 is occupied, stop the other local service before starting this console. HookForge's quickstart also uses that port; run the two demos separately. If the browser cannot connect, confirm the server is still running and use the loopback URL above. A saved report can be inspected without the browser.
 
 ![Console preview](media/console-desktop.png)
 
