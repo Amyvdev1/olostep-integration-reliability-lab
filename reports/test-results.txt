@@ -1,0 +1,34 @@
+Failed to find real location of C:\Python314\python.exe
+test_duplicate_identity_not_counted_twice (test_contract_edges.EdgeTests.test_duplicate_identity_not_counted_twice) ... ok
+test_hosted_content_is_not_assumed_complete (test_contract_edges.EdgeTests.test_hosted_content_is_not_assumed_complete) ... ok
+test_live_adapter_sends_expected_request_without_exposing_key (test_contract_edges.EdgeTests.test_live_adapter_sends_expected_request_without_exposing_key) ... ok
+test_missing_items_prevent_complete_claim (test_contract_edges.EdgeTests.test_missing_items_prevent_complete_claim) ... ok
+test_noninteger_cursor_rejected (test_contract_edges.EdgeTests.test_noninteger_cursor_rejected) ... ok
+test_nonobject_json_rejected (test_contract_edges.EdgeTests.test_nonobject_json_rejected) ... ok
+test_provider_error_body_never_reaches_exception (test_contract_edges.EdgeTests.test_provider_error_body_never_reaches_exception) ... ok
+test_redirect_policy_does_not_forward_credentials (test_contract_edges.EdgeTests.test_redirect_policy_does_not_forward_credentials) ... ok
+test_duplicate_persists_across_restarts_and_conflicts_rejected (test_workflow.InboxTests.test_duplicate_persists_across_restarts_and_conflicts_rejected) ... ok
+test_malformed_event_rejected (test_workflow.InboxTests.test_malformed_event_rejected) ... ok
+test_ambiguous_creation_never_retries (test_workflow.WorkflowTests.test_ambiguous_creation_never_retries) ... ok
+test_bad_policy_rejected (test_workflow.WorkflowTests.test_bad_policy_rejected) ... ok
+test_deadline_retains_resume_id (test_workflow.WorkflowTests.test_deadline_retains_resume_id) ... ok
+test_empty_urls_rejected (test_workflow.WorkflowTests.test_empty_urls_rejected) ... ok
+test_exhaustion_is_bounded (test_workflow.WorkflowTests.test_exhaustion_is_bounded) ... ok
+test_export_labels_fixture_and_preserves_unknown (test_workflow.WorkflowTests.test_export_labels_fixture_and_preserves_unknown) ... ok
+test_invalid_id_never_reaches_transport (test_workflow.WorkflowTests.test_invalid_id_never_reaches_transport) ... ok
+test_malformed_item_response (test_workflow.WorkflowTests.test_malformed_item_response) ... ok
+test_missing_live_key (test_workflow.WorkflowTests.test_missing_live_key) ... ok
+test_null_content_is_unresolved (test_workflow.WorkflowTests.test_null_content_is_unresolved) ... ok
+test_partial_completion_is_not_full_success (test_workflow.WorkflowTests.test_partial_completion_is_not_full_success) ... ok
+test_repeated_cursor_stops (test_workflow.WorkflowTests.test_repeated_cursor_stops) ... ok
+test_resume_does_not_create (test_workflow.WorkflowTests.test_resume_does_not_create) ... ok
+test_secret_in_url_is_rejected (test_workflow.WorkflowTests.test_secret_in_url_is_rejected) ... ok
+test_success_paginates_and_retrieves_all (test_workflow.WorkflowTests.test_success_paginates_and_retrieves_all) ... ok
+test_transient_read_is_retried_once (test_workflow.WorkflowTests.test_transient_read_is_retried_once) ... ok
+test_unauthorized_is_not_retried (test_workflow.WorkflowTests.test_unauthorized_is_not_retried) ... ok
+test_unknown_credits_are_not_zero (test_workflow.WorkflowTests.test_unknown_credits_are_not_zero) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 1.435s
+
+OK

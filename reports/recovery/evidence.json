@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "mode": "fixture",
+  "started_at": "2026-10-14T12:16:44.175967+00:00",
+  "status": "complete",
+  "batch_id": "batch_fixture",
+  "expected_items": 3,
+  "credits": {
+    "value": null,
+    "evidence": "unknown"
+  },
+  "read_retries": 1,
+  "events": [
+    {
+      "sequence": 1,
+      "elapsed_seconds": 0.0002,
+      "action": "create_batch",
+      "outcome": "requested"
+    },
+    {
+      "sequence": 2,
+      "elapsed_seconds": 0.0004,
+      "action": "create_batch",
+      "outcome": "accepted",
+      "batch_id": "batch_fixture"
+    },
+    {
+      "sequence": 3,
+      "elapsed_seconds": 0.0004,
+      "action": "retry_read",
+      "outcome": "scheduled",
+      "attempt": 1,
+      "reason": "http_error",
+      "status": 503
+    },
+    {
+      "sequence": 4,
+      "elapsed_seconds": 1.0137,
+      "action": "poll",
+      "outcome": "completed"
+    },
+    {
+      "sequence": 5,
+      "elapsed_seconds": 1.0138,
+      "action": "list_items",
+      "outcome": "received",
+      "category": "completed",
+      "count": 2
+    },
+    {
+      "sequence": 6,
+      "elapsed_seconds": 1.0138,
+      "action": "retrieve",
+      "outcome": "completed",
+      "item": "page-1"
+    },
+    {
+      "sequence": 7,
+      "elapsed_seconds": 1.0138,
+      "action": "retrieve",
+      "outcome": "completed",
+      "item": "page-2"
+    },
+    {
+      "sequence": 8,
+      "elapsed_seconds": 1.0138,
+      "action": "list_items",
+      "outcome": "received",
+      "category": "completed",
+      "count": 1
+    },
+    {
+      "sequence": 9,
+      "elapsed_seconds": 1.0139,
+      "action": "retrieve",
+      "outcome": "completed",
+      "item": "page-3"
+    },
+    {
+      "sequence": 10,
+      "elapsed_seconds": 1.0139,
+      "action": "list_items",
+      "outcome": "received",
+      "category": "failed",
+      "count": 0
+    }
+  ],
+  "items": [
+    {
+      "custom_id": "page-1",
+      "url": "https://example.com/quickstart",
+      "status": "completed",
+      "evidence": "fixture",
+      "content": "# Integration evidence\n\n```python\nprint(\"hello\")\n```\n"
+    },
+    {
+      "custom_id": "page-2",
+      "url": "https://example.com/auth",
+      "status": "completed",
+      "evidence": "fixture",
+      "content": "# Integration evidence\n\n```python\nprint(\"hello\")\n```\n"
+    },
+    {
+      "custom_id": "page-3",
+      "url": "https://example.com/recovery",
+      "status": "completed",
+      "evidence": "fixture",
+      "content": "# Integration evidence\n\n```python\nprint(\"hello\")\n```\n"
+    }
+  ],
+  "policy": {
+    "deadline_seconds": 30,
+    "read_attempts": 3,
+    "create_attempts": 1
+  },
+  "limitations": [
+    "Fixture responses are synthetic, not Olostep performance evidence.",
+    "Credits are not inferred from successful item counts.",
+    "Webhook inbox is a local simulation, not a public receiver."
+  ],
+  "elapsed_seconds": 1.0139,
+  "counts": {
+    "completed": 3,
+    "failed": 0,
+    "unresolved": 0
+  }
+}

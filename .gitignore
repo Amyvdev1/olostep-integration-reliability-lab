@@ -1,0 +1,11 @@
+__pycache__/
+.env
+*.log
+.venv/
+*.sqlite*
+output/
+node_modules/
+media/*.webm
+media/raw/
+media/article-*.png
+media/video-review.png

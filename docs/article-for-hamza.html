@@ -1,0 +1,142 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Last Mile of an API Integration — Amy V</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f2f0e8;color:#182526;font:17px/1.8 Georgia,serif}
+main{max-width:850px;margin:55px auto;padding:60px 75px;background:#fffef8;border-top:5px solid #49663c}
+.folio{font:11px/1.5 Arial,sans-serif;letter-spacing:3px;color:#526a51;margin-bottom:42px}
+h1{font-size:47px;line-height:1.12;letter-spacing:-1.5px;margin:0 0 25px}h2{font-size:21px;line-height:1.5;font-weight:normal;color:#57635d}
+h3{font:600 22px/1.4 Arial,sans-serif;margin-top:38px;color:#1d3c35}a{color:#3b654c;text-decoration-thickness:1px;text-underline-offset:3px}
+strong{color:#1d3c35}code{font:13px monospace;background:#eef1e8;padding:2px 4px}li{margin:9px 0}
+@media(max-width:700px){main{padding:28px;margin:0}h1{font-size:35px}}
+@media print{body{background:white;font-size:11pt;line-height:1.55}main{max-width:none;margin:0;padding:0;border:0}h1{font-size:31pt}h2{font-size:15pt}h3{font-size:14pt;break-after:avoid}p,li{orphans:3;widows:3}a{color:#244434} .folio{margin-bottom:25px}}
+</style><main><div class="folio">AMY V / ENGINEERING CASE STUDY / 2026</div><h1>The Last Mile of an API Integration Is a Decision</h1>
+<h2>An independent Olostep case study in partial results, recovery, and executable documentation</h2>
+<p><strong>Amy V · Technical case study for Hamza and the Olostep team</strong></p>
+<p>A batch can finish successfully while the application still lacks the information
+it needs. That distinction is easy to describe and surprisingly easy to erase in
+code. A green status badge, a completed polling loop, or a convenient example can
+encourage a developer to treat the end of an operation as proof of a complete result.</p>
+<p>For a web-data pipeline, those are separate claims. The service may have finished
+processing every submitted URL while one page failed, another returned no usable
+content, and a third remains unavailable to the consumer. The application needs to
+understand those outcomes before using the dataset downstream.</p>
+<p>I built the <strong>Olostep Integration Reliability Lab</strong> around that boundary. It is a
+small, independent reference implementation of one developer journey: submit a
+batch, follow its progress, enumerate its outcomes, retrieve content, and export
+evidence. The intent is to make operational decisions visible and teachable.</p>
+<p>The current verification is local and fixture-based. The optional REST adapter is
+implemented but has not been exercised against a live Olostep account. That limit
+is part of the case study, not something the visual presentation should obscure.</p>
+<h3>Start where the developer's decision begins</h3>
+<p>Olostep's documentation covers a broad set of capabilities, including scraping,
+batching, crawling, discovery, and research. A useful reference does not need to
+reproduce that whole surface. It needs to choose a situation precisely enough that
+the reader understands why one path is appropriate.</p>
+<p>This sample begins with known URLs. That makes batching a coherent choice and
+removes the separate uncertainty of discovering relevant sources. Search can be
+added later, but it introduces a different question: whether the returned pages
+were the right pages in the first place. Mixing that concern into the initial
+example would make an extraction failure harder to explain.</p>
+<p>The batch guide provides the essential lifecycle. The sample adds an explicit
+consumer policy around it: how long to wait, what to retry, when to stop, and what
+evidence to preserve. These are application decisions, not assertions about how
+Olostep ought to implement its service. <a href="https://docs.olostep.com/features/batches">Batch workflow</a></p>
+<h3>Three outcomes are more useful than one success flag</h3>
+<p>The workflow exports three application-level outcomes:</p>
+<ul>
+<li><strong>Complete:</strong> enumeration finished and the retrieved content is usable under
+  this sample's narrow check.</li>
+<li><strong>Partial:</strong> enumeration finished, but at least one source failed or has
+  unresolved content.</li>
+<li><strong>Incomplete:</strong> the client could not finish determining the result.</li>
+</ul>
+<p>“Usable” has a deliberately modest meaning here: a nonempty Markdown string. It
+does not establish factual correctness, relevance, completeness of a document,
+or suitability for a particular model. Those require additional evaluation.</p>
+<p>In the partial-result fixture, three sources are expected. Two yield content and
+one appears in the failed inventory. The exported result preserves that failure.
+It does not silently omit the page and present the remaining two as the whole
+dataset. When the submitted count is known, the runner checks that enumeration
+accounts for it.</p>
+<p>This is a documentation lesson as much as a software lesson: explain the meaning
+of success before teaching the reader how to print it.</p>
+<h3>A retry is a decision about uncertainty</h3>
+<p>It is tempting to put every request inside the same retry helper. That produces
+short code, but it treats materially different operations as equivalent.</p>
+<p>The critical distinction in this sample is between creating work and observing
+work. If a creation request times out, the client may not know whether the server
+accepted it. Repeating that request can create another operation. A local request
+identifier does not solve this unless the provider offers and guarantees matching
+idempotency semantics for that endpoint.</p>
+<p>Consequently, the sample makes one creation attempt. An ambiguous network or
+server failure produces an explicit unknown outcome and instructions to reconcile
+before resubmitting. Once a batch ID is available, subsequent commands can resume
+reads against the existing operation.</p>
+<p>Reads have a separate, bounded policy: three attempts for selected transient
+failures, short exponential delays, and a shared deadline. Authentication failures
+do not enter that retry loop. A credential rejected once is unlikely to become
+valid because the program repeated itself.</p>
+<p>The policy is intentionally small. It does not yet parse Retry-After or add jitter.
+Those would matter in a deployed fleet. Stating those omissions makes it possible
+to evaluate the reference on its actual scope.</p>
+<h3>Pagination is part of correctness</h3>
+<p>Retrieving the first page of a result set is not the same as retrieving the result
+set. The runner follows the documented cursor pattern, stops on an absent terminal
+cursor, and rejects repeated cursors. It also caps the number of pages and rejects
+duplicate item identities rather than counting them twice.</p>
+<p>These checks turn a potentially silent reporting error into a visible integration
+failure. The response is less cosmetically smooth, but more useful to a developer
+trying to understand what happened. The underlying model follows the separation
+between item listing and stored-content retrieval in the public reference.
+<a href="https://docs.olostep.com/api-reference/batches/items">Batch items</a>,
+<a href="https://docs.olostep.com/api-reference/retrieve">Retrieve content</a></p>
+<h3>A webhook should invite reconciliation</h3>
+<p>The accompanying SQLite inbox demonstrates a second boundary: receiving a
+notification is different from proving the underlying result.</p>
+<p>It stores event IDs with a digest of the semantic payload. Receiving the same
+event again produces a duplicate decision. Reusing an ID with changed data
+produces a conflict. Because the record is persistent, duplicate detection survives
+a restart. Delivery-attempt metadata is excluded from the digest so an ordinary
+redelivery does not look like a payload conflict.</p>
+<p>This is deliberately an isolated simulator, not a production receiver. It proves
+the inbox's duplicate-handling behavior; it does not prove end-to-end exactly-once
+processing. A production system would need authentication, durable work scheduling,
+crash reconciliation and a clear transaction boundary around side effects.</p>
+<p>Olostep's webhook documentation describes completion notifications and delivery
+retries. The application should use such notifications to initiate authenticated
+status retrieval, rather than trusting an incoming payload as the complete source
+of truth. <a href="https://docs.olostep.com/api-reference/common/webhooks">Webhook documentation</a></p>
+<h3>Evidence should travel with the result</h3>
+<p>The JSON export records item outcomes, retry decisions, the batch identifier,
+execution mode, policy and limitations. A Markdown export presents the same core
+evidence for human review.</p>
+<p>Credits remain unknown. An item count is not a billing measurement, and local
+timing is not a provider benchmark. The browser demonstration uses virtual time
+so a reviewer can explore an expired deadline immediately; that time is explicitly
+labeled as simulated. The CLI measures elapsed local execution instead.</p>
+<p>Those distinctions prevent a polished interface from lending more authority to
+a number than the evidence supports. A developer should not need to inspect the
+source code to discover that a displayed result was simulated.</p>
+<h3>Test the explanation, not only the implementation</h3>
+<p>The offline suite exercises the claims made in the guide: partial completion,
+bounded retries, retained resume identifiers, non-retried ambiguous creation,
+cursor loops, missing content, unknown credits, and durable duplicate detection.</p>
+<p>The fixtures make those conditions reproducible without credentials or network
+variability. That is valuable for learning and regression testing. It is not a
+substitute for a small live compatibility run. The next verification step should
+use permitted public URLs, a limited credit budget, and preserved sanitized response
+shapes to check the adapter against the current service.</p>
+<p>After compatibility is established, a separate usability exercise could ask a
+developer unfamiliar with the project to complete the quickstart and explain a
+partial result. Measure where they hesitate and whether the recovery instructions
+resolve the problem. Until then, claims about faster onboarding or reduced support
+work would be hypotheses.</p>
+<h3>What this could contribute</h3>
+<p>This reference offers three connected artifacts: working code a developer can
+inspect, documentation they can execute, and a short demonstration they can follow.
+Its value is their agreement. The article describes decisions that exist in the
+runner; the tests exercise those decisions; the console reveals their evidence.</p>
+<p>That is the contribution I would want to bring to API documentation: help users
+understand the system well enough to make good decisions when the first successful
+request is no longer the whole problem.</p>
+<p><em>Independent sample. No affiliation, endorsement, production adoption, or live
+performance claim is implied. Public-source references were reviewed on October
+14, 2026. The accompanying verification record states the checks actually run.</em></p></main></html>

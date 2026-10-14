@@ -1,0 +1,9 @@
+{
+  "name": "olostep-integration-reliability-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Independent reference workflow by Amy V; Python core, optional Node example",
+  "engines": { "node": ">=24" },
+  "license": "MIT"
+}
