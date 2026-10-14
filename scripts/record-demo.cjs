@@ -22,7 +22,7 @@ const path = require('node:path');
  await page.getByRole('button',{name:'Export JSON'}).click();
  const download=await downloadPromise;await download.saveAs('media/recorded-evidence.json');
  const exported=await page.evaluate(()=>report);
- if(exported.status!=='complete'||exported.credits.value!==null)throw Error('Export evidence mismatch');
+ if(exported.schema_version!==2||exported.status!=='complete'||exported.credits.value!==null||exported.reconciliation.identity_basis!=='manifest')throw Error('Export evidence mismatch');
  await page.screenshot({path:'media/console-complete.png',fullPage:true});
  const video=page.video();await context.close();
  await video.saveAs('media/walkthrough.webm');

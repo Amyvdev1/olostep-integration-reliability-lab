@@ -5,7 +5,9 @@
 `create → accepted → poll → list completed + failed → retrieve → evidence`
 
 The runner reports `complete` only when all enumerated content is usable and the
-known submitted item count agrees. `partial` means enumeration finished but some
+submitted identities and provider count agree when available. Without a saved
+manifest, a resumed run verifies the provider count only, explicitly labeled in
+the report. Without either an expected count or a manifest, completeness is unknown. `partial` means enumeration finished but some
 items failed or have missing content. `incomplete` means the workflow could not
 finish determining its result; already retrieved items remain in the report.
 
@@ -14,8 +16,10 @@ finish determining its result; already retrieved items remain in the report.
 - POST creation: one attempt. A network failure or server 5xx leaves acceptance
   uncertain. Return `creation_unknown_do_not_resubmit` rather than replaying it.
 - GET reads: at most three attempts for network failures and 429/500/502/503/504.
-- Backoff: 1 then 2 seconds, within a shared deadline. This deterministic sample
-  does not implement jitter or parse Retry-After; add both before fleet deployment.
+- Backoff: the larger of exponential delay (1 then 2 seconds) and a valid
+  Retry-After value, plus up to 250 ms jitter in live mode. Numeric seconds and
+  HTTP-date values are supported. Fixtures use zero jitter unless a test injects it.
+  The shared deadline may stop waiting before another request is permitted.
 - Authentication errors: stop. Changing nothing and retrying an invalid key is not recovery.
 - Polling: one-second intervals, sharing the same deadline as retrieval. Live
   request timeout is capped at ten seconds and remaining budget.
@@ -24,6 +28,19 @@ finish determining its result; already retrieved items remain in the report.
 
 Time budgets are best-effort client bounds: DNS and operating-system networking
 can exceed socket timeouts. This is not a hard real-time scheduler.
+
+## Resume and reconciliation
+
+The CLI writes a minimal checkpoint using a temporary file, flush/fsync and atomic
+replacement before its first poll. Resume preserves the original custom IDs and
+never creates work. Count equality alone cannot prove identity: three unexpected
+IDs cannot substitute for the three submitted IDs. Reports include missing and
+unexpected identities, provider total, observed count, and the verification basis.
+
+A crash after provider acceptance but before checkpoint persistence still leaves a
+reconciliation gap. If checkpoint writing fails, the incomplete report retains the
+batch ID; recover it before proceeding. This is not distributed exactly-once execution
+or a concurrent multi-process checkpoint store.
 
 ## Duplicate notification handling
 
@@ -44,7 +61,8 @@ separate from the runner and never treats a webhook as authoritative API evidenc
 | fixture | Local synthetic response under a controlled scenario |
 | live | A response returned by the opt-in provider adapter |
 | documented | Public documentation describes a behavior; see source map |
-| unknown | Not observed or not reliably attributable, including credits |
+| provider_reported | Valid nonnegative usage returned by a live batch-info response; not an invoice audit |
+| unknown | Absent, invalid or not reliably attributable usage; never silently converted to zero |
 
 No cost is inferred from page counts. Console elapsed values are simulated. CLI
 elapsed values measure local execution, not a provider benchmark. This sample has

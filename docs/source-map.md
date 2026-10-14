@@ -8,6 +8,7 @@ independent interpretation, not an audit endorsed by Olostep.
 | Create batch with items/custom IDs | https://docs.olostep.com/api-reference/batches/create | `Runner.run` |
 | Async flow and new-account constraints | https://docs.olostep.com/features/batches | Bounded polling; local 10-URL cap |
 | Completed/failed items, retrieval IDs | https://docs.olostep.com/api-reference/batches/items | `Runner.items` |
+| Batch totals and reported usage | https://docs.olostep.com/api-reference/batches/info | Reconciliation and labeled usage fields |
 | Retrieve stored content | https://docs.olostep.com/api-reference/retrieve | Markdown retrieval |
 | Completion notifications and re-delivery | https://docs.olostep.com/api-reference/common/webhooks | Local `Inbox` simulation |
 | Bearer credentials | https://docs.olostep.com/get-started/authentication | Environment variable; fixed-origin adapter |

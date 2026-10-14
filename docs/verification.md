@@ -2,9 +2,10 @@
 
 ## Executed
 
-- Python 3.14 local suite: **28 tests passed; zero failures**.
+- Python 3.14 local suite: **42 tests passed; zero failures**.
 - CLI partial scenario: 2 completed, 1 failed, overall partial; Markdown/JSON written.
 - CLI transient scenario: recovered read; 3 completed, overall complete.
+- Checkpoint resume CLI: 3 completed, manifest identities reconciled, no new creation.
 - Python source compilation succeeded.
 - Node 24 TypeScript example executed its missing-key guard without a network call.
 - Actual local browser at 1440×1080: partial flow, guided recovery chapters, complete
@@ -13,7 +14,7 @@
 - Four-page article PDF rendered and all pages visually inspected.
 - Real local browser walkthrough recorded. Synthetic fixture mode remains visible.
 
-Evidence: `reports/test-results.txt`, `reports/sample/`, `reports/recovery/`,
+Evidence: `reports/test-results.txt`, `reports/sample/`, `reports/recovery/`, `reports/resume/`,
 `media/browser-verification.json`, `media/recorded-evidence.json`, screenshots,
 and `media/walkthrough.mp4`.
 

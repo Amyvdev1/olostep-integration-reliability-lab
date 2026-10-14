@@ -57,8 +57,10 @@ or suitability for a particular model. Those require additional evaluation.
 In the partial-result fixture, three sources are expected. Two yield content and
 one appears in the failed inventory. The exported result preserves that failure.
 It does not silently omit the page and present the remaining two as the whole
-dataset. When the submitted count is known, the runner checks that enumeration
-accounts for it.
+dataset. The runner checks both the original item identities and the provider
+total when available. Equal counts do not prove that the right three items returned.
+A resumed run without the original manifest explicitly reports its weaker,
+provider-count-only verification; missing count data leaves completeness unknown.
 
 This is a documentation lesson as much as a software lesson: explain the meaning
 of success before teaching the reader how to print it.
@@ -77,16 +79,19 @@ idempotency semantics for that endpoint.
 Consequently, the sample makes one creation attempt. An ambiguous network or
 server failure produces an explicit unknown outcome and instructions to reconcile
 before resubmitting. Once a batch ID is available, subsequent commands can resume
-reads against the existing operation.
+reads against the existing operation. The CLI saves a minimal checkpoint before
+polling: batch ID, execution mode, and expected item identities. Atomic replacement
+protects readers from a half-written file. It cannot eliminate the gap between
+provider acceptance and local persistence; that case still requires reconciliation.
 
 Reads have a separate, bounded policy: three attempts for selected transient
 failures, short exponential delays, and a shared deadline. Authentication failures
 do not enter that retry loop. A credential rejected once is unlikely to become
 valid because the program repeated itself.
 
-The policy is intentionally small. It does not yet parse Retry-After or add jitter.
-Those would matter in a deployed fleet. Stating those omissions makes it possible
-to evaluate the reference on its actual scope.
+Reads honor Retry-After in seconds or HTTP-date form, with small jitter in live
+mode. A delay exceeding the remaining budget stops the run instead of triggering
+an early retry. Tests inject time and jitter to verify this policy.
 
 ### Pagination is part of correctness
 
@@ -129,7 +134,10 @@ The JSON export records item outcomes, retry decisions, the batch identifier,
 execution mode, policy and limitations. A Markdown export presents the same core
 evidence for human review.
 
-Credits remain unknown. An item count is not a billing measurement, and local
+Valid usage returned by batch information is labeled provider-reported in live
+mode or fixture-derived in simulation. Missing or invalid usage stays unknown;
+a genuine zero remains zero. Neither item counts nor synthetic usage are billing
+measurements, and a provider field is not an independently reconciled invoice. Local
 timing is not a provider benchmark. The browser demonstration uses virtual time
 so a reviewer can explore an expired deadline immediately; that time is explicitly
 labeled as simulated. The CLI measures elapsed local execution instead.
@@ -143,6 +151,10 @@ source code to discover that a displayed result was simulated.
 The offline suite exercises the claims made in the guide: partial completion,
 bounded retries, retained resume identifiers, non-retried ambiguous creation,
 cursor loops, missing content, unknown credits, and durable duplicate detection.
+Regression cases also reject empty resumed results and wrong identities with
+matching counts, and verify checkpoint recovery and deadline-aware Retry-After.
+Distinct fixture documents include code, a table and an authentication guide;
+they exercise content handling, not the quality of real web extraction.
 
 The fixtures make those conditions reproducible without credentials or network
 variability. That is valuable for learning and regression testing. It is not a

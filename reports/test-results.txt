@@ -7,6 +7,20 @@ test_noninteger_cursor_rejected (test_contract_edges.EdgeTests.test_noninteger_c
 test_nonobject_json_rejected (test_contract_edges.EdgeTests.test_nonobject_json_rejected) ... ok
 test_provider_error_body_never_reaches_exception (test_contract_edges.EdgeTests.test_provider_error_body_never_reaches_exception) ... ok
 test_redirect_policy_does_not_forward_credentials (test_contract_edges.EdgeTests.test_redirect_policy_does_not_forward_credentials) ... ok
+test_checkpoint_exists_before_first_poll_and_survives_interruption (test_reconciliation.ReconciliationTests.test_checkpoint_exists_before_first_poll_and_survives_interruption) ... ok
+test_checkpoint_storage_failure_preserves_batch_without_recreating (test_reconciliation.ReconciliationTests.test_checkpoint_storage_failure_preserves_batch_without_recreating) ... ok
+test_distinct_fixture_content_survives_retrieval (test_reconciliation.ReconciliationTests.test_distinct_fixture_content_survives_retrieval) ... ok
+test_human_report_preserves_unknown_usage_and_reconciliation_basis (test_reconciliation.ReconciliationTests.test_human_report_preserves_unknown_usage_and_reconciliation_basis) ... ok
+test_invalid_checkpoint_and_conflicting_manifest_rejected (test_reconciliation.ReconciliationTests.test_invalid_checkpoint_and_conflicting_manifest_rejected) ... ok
+test_invalid_usage_remains_unknown (test_reconciliation.ReconciliationTests.test_invalid_usage_remains_unknown) ... ok
+test_provider_total_disagreement_is_visible (test_reconciliation.ReconciliationTests.test_provider_total_disagreement_is_visible) ... ok
+test_resume_empty_inventory_does_not_complete (test_reconciliation.ReconciliationTests.test_resume_empty_inventory_does_not_complete) ... ok
+test_retry_after_exceeding_deadline_prevents_another_request (test_reconciliation.ReconciliationTests.test_retry_after_exceeding_deadline_prevents_another_request) ... ok
+test_retry_after_is_respected_within_budget (test_reconciliation.ReconciliationTests.test_retry_after_is_respected_within_budget) ... ok
+test_retry_after_parser (test_reconciliation.ReconciliationTests.test_retry_after_parser) ... ok
+test_unknown_total_on_resume_is_not_complete (test_reconciliation.ReconciliationTests.test_unknown_total_on_resume_is_not_complete) ... ok
+test_usage_is_captured_with_fixture_provenance (test_reconciliation.ReconciliationTests.test_usage_is_captured_with_fixture_provenance) ... ok
+test_wrong_ids_with_same_count_do_not_complete (test_reconciliation.ReconciliationTests.test_wrong_ids_with_same_count_do_not_complete) ... ok
 test_duplicate_persists_across_restarts_and_conflicts_rejected (test_workflow.InboxTests.test_duplicate_persists_across_restarts_and_conflicts_rejected) ... ok
 test_malformed_event_rejected (test_workflow.InboxTests.test_malformed_event_rejected) ... ok
 test_ambiguous_creation_never_retries (test_workflow.WorkflowTests.test_ambiguous_creation_never_retries) ... ok
@@ -29,6 +43,6 @@ test_unauthorized_is_not_retried (test_workflow.WorkflowTests.test_unauthorized_
 test_unknown_credits_are_not_zero (test_workflow.WorkflowTests.test_unknown_credits_are_not_zero) ... ok
 
 ----------------------------------------------------------------------
-Ran 28 tests in 1.435s
+Ran 42 tests in 0.356s
 
 OK

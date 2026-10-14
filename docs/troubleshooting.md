@@ -10,6 +10,10 @@
 | `missing_content` | Retrieval did not return usable Markdown | Inspect requested format and provider result; retain unresolved status |
 | `repeated_cursor` | Pagination is not advancing | Stop and preserve evidence; review provider response schema |
 | `item_count_mismatch` | Enumerated items differ from submitted count | Investigate omissions or duplicates before claiming completion |
+| `item_identity_mismatch` | Counts match but identities differ | Compare missing/unexpected IDs; do not claim a complete dataset |
+| `provider_total_mismatch` | Provider total disagrees with manifest | Reconcile the original submission with provider response |
+| `completeness_unknown` | Resume lacks both manifest and valid total | Recover the checkpoint; do not interpret empty results as success |
+| `checkpoint_write_failed` / `checkpoint_conflict` | Local resume state was not safely saved | Preserve the returned batch ID; repair storage or reconcile the conflicting manifest; do not recreate |
 | `unexpected_batch_state` | Unsupported lifecycle status | Check current documentation and update a tested adapter mapping |
 | Port 8765 occupied | Another local server uses the port | Stop that server or change the explicit port in `lab/server.py` |
 

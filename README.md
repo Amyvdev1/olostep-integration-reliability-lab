@@ -33,18 +33,22 @@ the same runner as the CLI. Expect two completed items, one failed item, an over
 
 **Watch:** [Recorded fixture walkthrough](media/walkthrough.mp4). Silent screen
 recording with an on-screen guided explanation; no subtitles or impersonated voice.
-**Read:** [Four-page article for Hamza](docs/article-for-hamza.pdf).
+**Read:** [Technical article for Hamza](docs/article-for-hamza.pdf).
 
 ## Try a recovery
 
 ```sh
 python -m lab --scenario transient
 python -m lab --scenario timeout --budget 3
-python -m lab --resume batch_fixture --scenario success
+python -m lab --checkpoint output/checkpoints/batch_fixture.json --scenario success
 ```
 
 The timeout deliberately exits with code **2** and writes an incomplete report.
-The resume command performs reads only. Exit code 0 means the workflow completed;
+The checkpoint command performs reads only and verifies the original item identities.
+The CLI saves this minimal manifest immediately after creation, before polling.
+It contains no URLs, content or credentials. A bare `--resume BATCH_ID` is also
+available, but can verify only provider-reported counts without the original manifest.
+Exit code 0 means the workflow completed;
 check `status` to distinguish `complete` from `partial`.
 
 Other scenarios: `success`, `exhausted`, `unauthorized`, `cursor-loop`,
@@ -61,7 +65,7 @@ screenshots or an issue. Only use public URLs you have permission to process.
 
 ```sh
 python -m lab --live --allow-billable --url https://example.com --budget 600
-python -m lab --live --resume YOUR_BATCH_ID --budget 600
+python -m lab --live --checkpoint output/checkpoints/YOUR_BATCH_ID.json --budget 600
 ```
 
 Creation is restricted to 1–10 URLs here, deliberately below documented new-account
@@ -93,6 +97,7 @@ should trigger reconciliation through authenticated reads, not supply trusted co
 - [Troubleshooting](docs/troubleshooting.md)
 - [Source map](docs/source-map.md)
 - [Live versus fixture evidence](docs/live-vs-fixture-mode.md)
+- [Live compatibility status and bounded protocol](docs/live-compatibility.md)
 - [Article for Hamza](docs/article-for-hamza.md)
 - [Explain and demonstrate the project](docs/walkthrough.md)
 - [Verification record](docs/verification.md)

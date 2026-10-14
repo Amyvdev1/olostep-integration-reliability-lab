@@ -5,6 +5,11 @@ SCENARIOS = ('success', 'partial', 'transient', 'timeout', 'exhausted',
              'unauthorized', 'cursor-loop', 'missing-content', 'ambiguous-create')
 URLS = ['https://example.com/quickstart', 'https://example.com/auth',
         'https://example.com/recovery']
+CONTENT = {
+    'ret_1': '# Quickstart\n\nSubmit known URLs, then retain the batch ID.\n\n```python\nbatch_id = "batch_example"\n```\n',
+    'ret_2': '# Authentication\n\nKeep credentials in the environment.\n\n```sh\n# OLOSTEP_API_KEY is configured privately\n```\n',
+    'ret_3': '# Recovery\n\nResume reads against the existing operation.\n\n| Outcome | Action |\n|---|---|\n| Timeout | Resume by ID |\n'
+}
 
 
 class Fixture:
@@ -29,7 +34,7 @@ class Fixture:
             self.reads += 1
             if self.scenario == 'exhausted' or (self.scenario == 'transient' and self.reads == 1):
                 raise Failure('http_error', 503)
-            return {'id': 'batch_fixture', 'status': 'in_progress' if
+            return {'id': 'batch_fixture', 'total_urls': 3, 'status': 'in_progress' if
                     self.scenario == 'timeout' or self.reads == 1 else 'completed'}
         if '/items?' in path:
             failed = 'status=failed' in path
@@ -48,5 +53,7 @@ class Fixture:
         if path.startswith('/retrieve?'):
             if self.scenario == 'missing-content' and 'ret_2' in path:
                 return {'markdown_content': None}
-            return {'markdown_content': '# Integration evidence\n\n```python\nprint("hello")\n```\n'}
+            from urllib.parse import urlparse, parse_qs
+            rid = parse_qs(urlparse(path).query).get('retrieve_id', [''])[0]
+            return {'markdown_content': CONTENT.get(rid)}
         raise Failure('unexpected_fixture_request')

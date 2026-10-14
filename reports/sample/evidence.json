@@ -1,11 +1,15 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "mode": "fixture",
-  "started_at": "2026-10-14T12:16:41.639110+00:00",
+  "started_at": "2026-10-14T12:58:21.866568+00:00",
   "status": "partial",
   "batch_id": "batch_fixture",
   "expected_items": 3,
   "credits": {
+    "value": null,
+    "evidence": "unknown"
+  },
+  "cost_usd": {
     "value": null,
     "evidence": "unknown"
   },
@@ -19,64 +23,70 @@
     },
     {
       "sequence": 2,
-      "elapsed_seconds": 0.0002,
+      "elapsed_seconds": 0.0003,
       "action": "create_batch",
       "outcome": "accepted",
       "batch_id": "batch_fixture"
     },
     {
       "sequence": 3,
-      "elapsed_seconds": 0.0003,
+      "elapsed_seconds": 0.0215,
+      "action": "checkpoint",
+      "outcome": "saved"
+    },
+    {
+      "sequence": 4,
+      "elapsed_seconds": 0.0216,
       "action": "poll",
       "outcome": "in_progress"
     },
     {
-      "sequence": 4,
-      "elapsed_seconds": 1.004,
+      "sequence": 5,
+      "elapsed_seconds": 1.0264,
       "action": "poll",
       "outcome": "completed"
     },
     {
-      "sequence": 5,
-      "elapsed_seconds": 1.0041,
+      "sequence": 6,
+      "elapsed_seconds": 1.0265,
       "action": "list_items",
       "outcome": "received",
       "category": "completed",
       "count": 2
     },
     {
-      "sequence": 6,
-      "elapsed_seconds": 1.0041,
+      "sequence": 7,
+      "elapsed_seconds": 1.0266,
       "action": "retrieve",
       "outcome": "completed",
       "item": "page-1"
     },
     {
-      "sequence": 7,
-      "elapsed_seconds": 1.0041,
+      "sequence": 8,
+      "elapsed_seconds": 1.0266,
       "action": "retrieve",
       "outcome": "completed",
       "item": "page-2"
     },
     {
-      "sequence": 8,
-      "elapsed_seconds": 1.0042,
+      "sequence": 9,
+      "elapsed_seconds": 1.0267,
       "action": "list_items",
       "outcome": "received",
       "category": "completed",
       "count": 0
     },
     {
-      "sequence": 9,
-      "elapsed_seconds": 1.0042,
+      "sequence": 10,
+      "elapsed_seconds": 1.0267,
       "action": "list_items",
       "outcome": "received",
       "category": "failed",
       "count": 1
     },
     {
-      "sequence": 10,
-      "elapsed_seconds": 1.0042,
+      "sequence": 11,
+      "elapsed_seconds": 1.0267,
       "action": "failed_item",
       "outcome": "failed",
       "item": "page-3"
@@ -88,14 +98,14 @@
       "url": "https://example.com/quickstart",
       "status": "completed",
       "evidence": "fixture",
-      "content": "# Integration evidence\n\n```python\nprint(\"hello\")\n```\n"
+      "content": "# Quickstart\n\nSubmit known URLs, then retain the batch ID.\n\n```python\nbatch_id = \"batch_example\"\n```\n"
     },
     {
       "custom_id": "page-2",
       "url": "https://example.com/auth",
       "status": "completed",
       "evidence": "fixture",
-      "content": "# Integration evidence\n\n```python\nprint(\"hello\")\n```\n"
+      "content": "# Authentication\n\nKeep credentials in the environment.\n\n```sh\n# OLOSTEP_API_KEY is configured privately\n```\n"
     },
     {
       "custom_id": "page-3",
@@ -115,7 +125,15 @@
     "Credits are not inferred from successful item counts.",
     "Webhook inbox is a local simulation, not a public receiver."
   ],
-  "elapsed_seconds": 1.0042,
+  "checkpoint": "output\\checkpoints\\batch_fixture.json",
+  "reconciliation": {
+    "provider_total": 3,
+    "observed_count": 3,
+    "identity_basis": "manifest",
+    "missing_ids": [],
+    "unexpected_ids": []
+  },
+  "elapsed_seconds": 1.0267,
   "counts": {
     "completed": 2,
     "failed": 1,

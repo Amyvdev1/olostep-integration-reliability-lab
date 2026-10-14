@@ -15,8 +15,8 @@ still needs a provider compatibility run.”
 | 0:00–0:40 | README and console | Who the example serves; fixture evidence boundary |
 | 0:40–1:30 | Partial scenario | Batch status and usable content are different facts |
 | 1:30–2:15 | `Runner.read` | Retry selected reads within an attempt and time budget |
-| 2:15–3:00 | Timeout and resume | Preserve the ID; resume reads instead of recreating work |
-| 3:00–3:40 | `Runner.items` | Follow cursors; detect loops and duplicate identifiers |
+| 2:15–3:00 | Timeout and checkpoint | Save the ID and original item identities; resume reads without recreating work |
+| 3:00–3:40 | `Runner.items` and reconciliation | Follow cursors; compare identities, not just counts |
 | 3:40–4:15 | `Inbox.accept` | SQLite uniqueness persists duplicate decisions |
 | 4:15–5:00 | Tests and evidence export | Show what is verified and what remains unknown |
 
@@ -68,7 +68,7 @@ Not in this delivery. The tests prove the local client behavior against fixtures
 The live adapter is implemented but requires a real compatibility run with a key.
 
 **What would you improve next?**
-Validate actual response shapes, add Retry-After/jitter handling, then conduct a
+Validate actual response shapes and usage fields, then conduct a
 small onboarding study. Only after that add search, a public webhook receiver or
 more languages. Improvements should follow observed friction.
 

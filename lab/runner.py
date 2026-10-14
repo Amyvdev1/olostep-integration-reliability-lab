@@ -2,17 +2,23 @@
 import time
 import re
 import math
+import random
 from datetime import datetime, timezone
 from urllib.parse import urlencode, urlparse, quote
 from .transport import Failure
+from .checkpoints import save as save_checkpoint
 
 
 class Runner:
-    def __init__(self, transport, budget=30, attempts=3, clock=time.monotonic, sleep=time.sleep):
+    def __init__(self, transport, budget=30, attempts=3, clock=time.monotonic, sleep=time.sleep, checkpoint_dir=None, page_size=50, jitter=None):
         if not math.isfinite(budget) or budget <= 0 or not 1 <= attempts <= 5:
             raise ValueError('Positive budget and 1..5 attempts required')
         self.api, self.budget, self.attempts = transport, budget, attempts
         self.clock, self.sleep = clock, sleep
+        if not isinstance(page_size, int) or isinstance(page_size, bool) or not 1 <= page_size <= 50:
+            raise ValueError('Page size must be an integer from 1 to 50')
+        self.checkpoint_dir, self.page_size = checkpoint_dir, page_size
+        self.jitter = jitter or (lambda: random.uniform(0, 0.25) if transport.mode == 'live' else 0)
 
     def event(self, action, outcome, **details):
         self.report['events'].append({'sequence': len(self.report['events']) + 1,
@@ -40,13 +46,14 @@ class Runner:
                 if not retryable or attempt == self.attempts - 1:
                     raise
                 self.report['read_retries'] += 1
-                self.event('retry_read', 'scheduled', attempt=attempt + 1, reason=exc.code, status=exc.status)
-                self.pause(2 ** attempt)
+                delay = max(2 ** attempt, exc.retry_after or 0) + max(0, min(0.25, self.jitter()))
+                self.event('retry_read', 'scheduled', attempt=attempt + 1, reason=exc.code, status=exc.status, delay_seconds=delay)
+                self.pause(delay)
 
     def items(self, batch_id, status):
         cursor, seen = None, set()
         for _ in range(100):
-            params = {'status': status, 'limit': 50}
+            params = {'status': status, 'limit': self.page_size}
             if cursor is not None:
                 params['cursor'] = cursor
             page = self.read(f'/batches/{quote(batch_id, safe="")}/items?' + urlencode(params))
@@ -65,13 +72,15 @@ class Runner:
             seen.add(key)
         raise Failure('pagination_limit')
 
-    def run(self, urls=None, batch_id=None):
+    def run(self, urls=None, batch_id=None, expected_ids=None):
         self.start = self.clock()
         self.deadline = self.start + self.budget
-        self.report = {'schema_version': 1, 'mode': self.api.mode,
+        manifest = expected_ids if batch_id else ([f'page-{i+1}' for i in range(len(urls))] if urls else None)
+        self.report = {'schema_version': 2, 'mode': self.api.mode,
             'started_at': datetime.now(timezone.utc).isoformat(), 'status': 'running',
-            'batch_id': batch_id, 'expected_items': len(urls) if urls else None,
+            'batch_id': batch_id, 'expected_items': len(manifest) if isinstance(manifest, list) else None,
             'credits': {'value': None, 'evidence': 'unknown'},
+            'cost_usd': {'value': None, 'evidence': 'unknown'},
             'read_retries': 0, 'events': [], 'items': [],
             'policy': {'deadline_seconds': self.budget, 'read_attempts': self.attempts,
                        'create_attempts': 1},
@@ -79,6 +88,9 @@ class Runner:
                            'Credits are not inferred from successful item counts.',
                            'Webhook inbox is a local simulation, not a public receiver.']}
         try:
+            if manifest is not None and (not isinstance(manifest, list) or not manifest or
+                    any(not isinstance(x, str) or not x for x in manifest) or len(set(manifest)) != len(manifest)):
+                raise Failure('invalid_manifest')
             if not batch_id:
                 if not urls or len(urls) > 10:
                     raise Failure('provide_1_to_10_urls')
@@ -100,16 +112,30 @@ class Runner:
                     raise Failure('invalid_batch_id')
                 self.report['batch_id'] = batch_id
                 self.event('create_batch', 'accepted', batch_id=batch_id)
+                if self.checkpoint_dir:
+                    self.report['checkpoint'] = save_checkpoint(self.checkpoint_dir, batch_id, manifest, self.api.mode)
+                    self.event('checkpoint', 'saved')
             if not re.fullmatch(r'[\w-]+', batch_id):
                 raise Failure('invalid_batch_id')
             while True:
-                state = self.read('/batches/' + batch_id).get('status')
+                info = self.read('/batches/' + batch_id)
+                state = info.get('status')
                 self.event('poll', str(state))
                 if state == 'completed':
                     break
                 if state not in ('in_progress', 'pending', 'processing'):
                     raise Failure('unexpected_batch_state')
                 self.pause(1)
+            provider_total = info.get('total_urls')
+            if not isinstance(provider_total, int) or isinstance(provider_total, bool) or provider_total < 0:
+                provider_total = None
+            for source, destination in (('credits_consumed', 'credits'), ('cost_usd', 'cost_usd')):
+                value = info.get(source)
+                if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value >= 0:
+                    self.report[destination] = {'value': value,
+                        'evidence': 'provider_reported' if self.api.mode == 'live' else 'fixture'}
+            if manifest is None:
+                self.report['expected_items'] = provider_total
             seen = set()
             for status in ('completed', 'failed'):
                 for item in self.items(batch_id, status):
@@ -142,8 +168,18 @@ class Runner:
                                     raise
                     self.event('retrieve' if status == 'completed' else 'failed_item', row['status'], item=identity)
             expected = self.report['expected_items']
+            self.report['reconciliation'] = {'provider_total': provider_total,
+                'observed_count': len(seen), 'identity_basis': 'manifest' if manifest is not None else 'provider_count_only',
+                'missing_ids': sorted(set(manifest) - seen) if manifest is not None else None,
+                'unexpected_ids': sorted(seen - set(manifest)) if manifest is not None else None}
+            if expected is None:
+                raise Failure('completeness_unknown')
             if expected is not None and len(seen) != expected:
                 raise Failure('item_count_mismatch')
+            if provider_total is not None and expected != provider_total:
+                raise Failure('provider_total_mismatch')
+            if manifest is not None and seen != set(manifest):
+                raise Failure('item_identity_mismatch')
             self.report['status'] = 'partial' if any(i['status'] != 'completed' for i in self.report['items']) else 'complete'
         except Failure as exc:
             self.report['status'] = 'incomplete'
