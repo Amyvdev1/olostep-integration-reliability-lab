@@ -8,11 +8,14 @@
 | Unit tests | Runner, transport mocks, SQLite restart test | Explicit local assertions |
 | Recorded video | Actual browser operations against loopback server | Visual demonstration of fixture behavior |
 
-No live provider calls were made during this build. No real key was used. A live
-run requires your privately configured key and explicit CLI opt-in for creation.
+One live compatibility run was completed on October 14, 2026 using a privately
+configured key: one batch, two public URLs, two retrieved Markdown documents.
+The browser console and video remain synthetic demonstrations. See
+[live compatibility](live-compatibility.md) for the exact evidence and limits.
+Any new live run still requires a key and explicit CLI opt-in for creation.
 No credentials are requested by the console or embedded in examples.
 
-To validate the next stage: choose one permitted public URL, review current costs,
+To repeat compatibility testing deliberately: choose permitted public URLs, review current costs,
 run the live command in the README, preserve a sanitized report, and compare actual
 response shapes with the documented adapter. If the response differs, add a fixture
 and regression test before changing the mapping. Do not change the report's mode

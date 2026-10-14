@@ -17,10 +17,11 @@ independent interpretation, not an audit endorsed by Olostep.
 
 The feature guide illustrates a cursor response; the reference example can omit it
 on the final page. This implementation accepts an absent/null cursor as terminal
-and rejects repeated cursors. Live compatibility must be verified before treating
-that interpretation as provider-tested behavior.
+and rejects repeated cursors. One live two-item batch confirmed an integer cursor
+on its first page and an omitted cursor on its terminal page. See the bounded
+[live compatibility record](live-compatibility.md).
 
 Response fixtures are original minimal examples, not copied production records.
-The supported status subset and top-level `markdown_content` response must be
-checked against the account's actual live responses. The sample fails visibly
+The in_progress/completed lifecycle and top-level `markdown_content` response were
+observed in that run; other states and failure responses remain fixture-tested. The sample fails visibly
 rather than silently guessing alternate schemas.

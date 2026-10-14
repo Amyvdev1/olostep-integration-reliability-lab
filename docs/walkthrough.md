@@ -6,7 +6,7 @@
 understand what happens after submission: how to wait, retrieve all the results,
 handle missing content, and recover without accidentally creating the same work
 again. The demonstration is offline and reproducible. The optional live adapter
-still needs a provider compatibility run.”
+has passed one small live batch check; the failure scenarios remain fixture-based.”
 
 ## Five-minute code tour
 
@@ -64,12 +64,13 @@ No. The inbox deduplicates notification IDs durably. It does not atomically comm
 downstream side effects. That would require a queue/outbox and crash recovery.
 
 **Did you test Olostep's production API?**
-Not in this delivery. The tests prove the local client behavior against fixtures.
-The live adapter is implemented but requires a real compatibility run with a key.
+Yes, one bounded batch with two public URLs. Both returned Markdown; real cursor
+pagination and identity reconciliation succeeded. Batch usage fields were null.
+This proves that specific lifecycle worked, not every failure mode or production reliability.
 
 **What would you improve next?**
-Validate actual response shapes and usage fields, then conduct a
-small onboarding study. Only after that add search, a public webhook receiver or
+Run a small onboarding study and investigate how account-level usage can be
+reconciled with null batch usage fields. Only after that add search, a public webhook receiver or
 more languages. Improvements should follow observed friction.
 
 **How do you know the documentation helps?**

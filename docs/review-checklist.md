@@ -8,6 +8,6 @@
 - Check that exported live content is safe to share before adding it to a repository.
 - Share one repository, one article and one concise demo when ready. Do not imply Olostep requested or endorsed this sample.
 
-Future work follows evidence: provider compatibility first, then jitter/Retry-After,
-then usability testing. Public webhook infrastructure and search orchestration are
+The first bounded provider check and jitter/Retry-After handling are complete.
+Next, observe an unfamiliar developer using the quickstart and recovery guide. Public webhook infrastructure and search orchestration are
 separate milestones, not hidden promises in this deliverable.

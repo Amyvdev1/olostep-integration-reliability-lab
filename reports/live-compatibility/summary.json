@@ -1,0 +1,68 @@
+{
+  "tested_revision": "dc366be3bf7639cab58d4b5d13362db15903524d",
+  "started_at_utc": "2026-10-14T13:55:17.175925+00:00",
+  "mode": "live",
+  "status": "complete",
+  "submitted_urls": [
+    "https://example.com",
+    "https://www.iana.org/help/example-domains"
+  ],
+  "creation_attempts": 1,
+  "http_calls": 10,
+  "read_retries": 0,
+  "elapsed_local_seconds": 11.1576,
+  "counts": {
+    "completed": 2,
+    "failed": 0,
+    "unresolved": 0
+  },
+  "reconciliation": {
+    "provider_total": 2,
+    "observed_count": 2,
+    "identity_basis": "manifest",
+    "missing_ids": [],
+    "unexpected_ids": []
+  },
+  "credits": {
+    "value": null,
+    "evidence": "unknown"
+  },
+  "cost_usd": {
+    "value": null,
+    "evidence": "unknown"
+  },
+  "pagination": {
+    "requested_page_size": 1,
+    "completed_pages": 2,
+    "first_page_cursor_present": true,
+    "last_page_cursor_absent": true
+  },
+  "retrieval": [
+    {
+      "custom_id": "page-2",
+      "url": "https://www.iana.org/help/example-domains",
+      "status": "completed",
+      "markdown_characters": 1076
+    },
+    {
+      "custom_id": "page-1",
+      "url": "https://example.com/",
+      "status": "completed",
+      "markdown_characters": 974
+    }
+  ],
+  "redactions": [
+    "batch ID",
+    "retrieve IDs",
+    "checkpoint path",
+    "response content",
+    "hosted content URLs",
+    "credentials"
+  ],
+  "limitations": [
+    "One small compatibility run, not a performance benchmark.",
+    "Failure scenarios remain fixture-only.",
+    "Usage fields were null; no inferred billing amount.",
+    "No hosted-content download or public webhook test."
+  ]
+}

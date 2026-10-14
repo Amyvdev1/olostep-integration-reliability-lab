@@ -18,9 +18,10 @@ small, independent reference implementation of one developer journey: submit a
 batch, follow its progress, enumerate its outcomes, retrieve content, and export
 evidence. The intent is to make operational decisions visible and teachable.
 
-The current verification is local and fixture-based. The optional REST adapter is
-implemented but has not been exercised against a live Olostep account. That limit
-is part of the case study, not something the visual presentation should obscure.
+The reference has 42 offline tests and one bounded live compatibility run: two
+public URLs, real cursor pagination and two retrieved Markdown documents. Item
+identities matched the submission. Failure scenarios remain simulated; one live
+success does not establish production reliability or general extraction quality.
 
 ### Start where the developer's decision begins
 
@@ -158,11 +159,15 @@ they exercise content handling, not the quality of real web extraction.
 
 The fixtures make those conditions reproducible without credentials or network
 variability. That is valuable for learning and regression testing. It is not a
-substitute for a small live compatibility run. The next verification step should
-use permitted public URLs, a limited credit budget, and preserved sanitized response
-shapes to check the adapter against the current service.
+substitute for live compatibility evidence. The single approved live batch
+returned items in a different order from submission, confirming why identity
+reconciliation matters. The first item page supplied an integer cursor and the
+last omitted it. Retrieval supplied nonempty Markdown for both sources. Batch
+information returned null usage fields, so the report retained unknown credits
+and cost rather than guessing. Sanitized response shapes are preserved in the
+[compatibility report](https://github.com/Amyvdev1/olostep-integration-reliability-lab/blob/main/docs/live-compatibility.md).
 
-After compatibility is established, a separate usability exercise could ask a
+A separate usability exercise could now ask a
 developer unfamiliar with the project to complete the quickstart and explain a
 partial result. Measure where they hesitate and whether the recovery instructions
 resolve the problem. Until then, claims about faster onboarding or reduced support
@@ -180,5 +185,5 @@ understand the system well enough to make good decisions when the first successf
 request is no longer the whole problem.
 
 *Independent sample. No affiliation, endorsement, production adoption, or live
-performance claim is implied. Public-source references were reviewed on October
+performance benchmark is implied. Public-source references were reviewed on October
 14, 2026. The accompanying verification record states the checks actually run.*

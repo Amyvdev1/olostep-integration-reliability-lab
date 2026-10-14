@@ -58,8 +58,10 @@ deadlines immediately; CLI durations are local elapsed time, not provider latenc
 
 ## Optional live path
 
-Live API execution has **not been verified** in this deliverable. The adapter uses
-the documented REST routes; offline tests do not prove provider compatibility.
+One bounded live batch was verified on October 14, 2026: two public URLs, actual
+cursor pagination and two Markdown retrievals, with matching item identities.
+See the [sanitized compatibility report](docs/live-compatibility.md). This does not
+validate every failure mode or establish production reliability.
 Set `OLOSTEP_API_KEY` privately in your shell. Never paste it into source files,
 screenshots or an issue. Only use public URLs you have permission to process.
 

@@ -18,9 +18,18 @@ Evidence: `reports/test-results.txt`, `reports/sample/`, `reports/recovery/`, `r
 `media/browser-verification.json`, `media/recorded-evidence.json`, screenshots,
 and `media/walkthrough.mp4`.
 
+## Bounded live compatibility
+
+- One POST created a batch for two approved public URLs; no second batch was created.
+- Four status reads observed in_progress then completed; real page-size-one cursor pagination worked.
+- Two Markdown retrievals succeeded; original item identities and provider total reconciled.
+- Ten total HTTP calls; zero read retries; 11.1576 seconds local elapsed time, not a benchmark.
+- credits_consumed and cost_usd were null; usage remains unknown.
+- Sanitized evidence: `reports/live-compatibility/`; detailed interpretation in `docs/live-compatibility.md`.
+
 ## Not executed / not claimed
 
-- No live Olostep API compatibility, performance or credit-usage run.
+- No live fault injection, load/performance benchmark or measured credit reconciliation.
 - No public webhook receiver, signature validation or production infrastructure.
 - No search workflow or hosted-content downloader.
 - No npm publication or production deployment.

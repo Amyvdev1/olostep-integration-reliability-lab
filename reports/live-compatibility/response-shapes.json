@@ -1,0 +1,217 @@
+[
+  {
+    "method": "POST",
+    "route": "/batches",
+    "at": "2026-10-14T13:55:17.176519+00:00",
+    "fields": {
+      "id": "str",
+      "object": "str",
+      "status": "str",
+      "created": "int",
+      "total_urls": "int",
+      "completed_urls": "int",
+      "number_retried": "int",
+      "batch_parser": "str",
+      "parser": "str",
+      "batch_country": "str",
+      "country": "str",
+      "start_date": "str",
+      "metadata": "dict"
+    },
+    "status": "in_progress",
+    "has_cursor": false
+  },
+  {
+    "method": "GET",
+    "route": "/batches/{batch_id}",
+    "at": "2026-10-14T13:55:18.293106+00:00",
+    "fields": {
+      "id": "str",
+      "batch_id": "str",
+      "object": "str",
+      "status": "str",
+      "created": "int",
+      "completed_at": "NoneType",
+      "total_urls": "int",
+      "completed_urls": "int",
+      "number_retried": "int",
+      "parser": "str",
+      "country": "str",
+      "start_date": "str",
+      "metadata": "dict",
+      "credits_consumed": "NoneType",
+      "cost_usd": "NoneType"
+    },
+    "status": "in_progress",
+    "has_cursor": false
+  },
+  {
+    "method": "GET",
+    "route": "/batches/{batch_id}",
+    "at": "2026-10-14T13:55:20.053585+00:00",
+    "fields": {
+      "id": "str",
+      "batch_id": "str",
+      "object": "str",
+      "status": "str",
+      "created": "int",
+      "completed_at": "NoneType",
+      "total_urls": "int",
+      "completed_urls": "int",
+      "number_retried": "int",
+      "parser": "str",
+      "country": "str",
+      "start_date": "str",
+      "metadata": "dict",
+      "credits_consumed": "NoneType",
+      "cost_usd": "NoneType"
+    },
+    "status": "in_progress",
+    "has_cursor": false
+  },
+  {
+    "method": "GET",
+    "route": "/batches/{batch_id}",
+    "at": "2026-10-14T13:55:21.795772+00:00",
+    "fields": {
+      "id": "str",
+      "batch_id": "str",
+      "object": "str",
+      "status": "str",
+      "created": "int",
+      "completed_at": "NoneType",
+      "total_urls": "int",
+      "completed_urls": "int",
+      "number_retried": "int",
+      "parser": "str",
+      "country": "str",
+      "start_date": "str",
+      "metadata": "dict",
+      "credits_consumed": "NoneType",
+      "cost_usd": "NoneType"
+    },
+    "status": "in_progress",
+    "has_cursor": false
+  },
+  {
+    "method": "GET",
+    "route": "/batches/{batch_id}",
+    "at": "2026-10-14T13:55:23.535788+00:00",
+    "fields": {
+      "id": "str",
+      "batch_id": "str",
+      "object": "str",
+      "status": "str",
+      "created": "int",
+      "completed_at": "int",
+      "total_urls": "int",
+      "completed_urls": "int",
+      "number_retried": "int",
+      "parser": "str",
+      "country": "str",
+      "start_date": "str",
+      "metadata": "dict",
+      "credits_consumed": "NoneType",
+      "cost_usd": "NoneType"
+    },
+    "status": "completed",
+    "has_cursor": false
+  },
+  {
+    "method": "GET",
+    "route": "/batches/{batch_id}/items",
+    "at": "2026-10-14T13:55:24.354953+00:00",
+    "fields": {
+      "id": "str",
+      "object": "str",
+      "status": "str",
+      "items": "list",
+      "items_count": "int",
+      "cursor": "int"
+    },
+    "status": "completed",
+    "item_count": 1,
+    "item_fields": [
+      {
+        "custom_id": "str",
+        "retrieve_id": "str",
+        "url": "str"
+      }
+    ],
+    "has_cursor": true
+  },
+  {
+    "method": "GET",
+    "route": "/retrieve",
+    "at": "2026-10-14T13:55:25.102182+00:00",
+    "fields": {
+      "markdown_content": "str",
+      "html_content": "NoneType",
+      "json_content": "NoneType",
+      "network_calls": "NoneType",
+      "screenshot_hosted_url": "NoneType",
+      "success": "bool",
+      "html_hosted_url": "NoneType",
+      "markdown_hosted_url": "str",
+      "json_hosted_url": "NoneType",
+      "size_exceeded": "bool"
+    },
+    "has_cursor": false
+  },
+  {
+    "method": "GET",
+    "route": "/batches/{batch_id}/items",
+    "at": "2026-10-14T13:55:25.915894+00:00",
+    "fields": {
+      "id": "str",
+      "object": "str",
+      "status": "str",
+      "items": "list",
+      "items_count": "int"
+    },
+    "status": "completed",
+    "item_count": 1,
+    "item_fields": [
+      {
+        "custom_id": "str",
+        "retrieve_id": "str",
+        "url": "str"
+      }
+    ],
+    "has_cursor": false
+  },
+  {
+    "method": "GET",
+    "route": "/retrieve",
+    "at": "2026-10-14T13:55:26.772998+00:00",
+    "fields": {
+      "markdown_content": "str",
+      "html_content": "NoneType",
+      "json_content": "NoneType",
+      "network_calls": "NoneType",
+      "screenshot_hosted_url": "NoneType",
+      "success": "bool",
+      "html_hosted_url": "NoneType",
+      "markdown_hosted_url": "str",
+      "json_hosted_url": "NoneType",
+      "size_exceeded": "bool"
+    },
+    "has_cursor": false
+  },
+  {
+    "method": "GET",
+    "route": "/batches/{batch_id}/items",
+    "at": "2026-10-14T13:55:27.554661+00:00",
+    "fields": {
+      "id": "str",
+      "object": "str",
+      "status": "str",
+      "items": "list",
+      "items_count": "int"
+    },
+    "status": "completed",
+    "item_count": 0,
+    "item_fields": [],
+    "has_cursor": false
+  }
+]

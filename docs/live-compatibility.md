@@ -1,32 +1,58 @@
-# Live compatibility — pending
+# Live compatibility — one bounded batch verified
 
-**Status: not executed.** The private API key was not available in the process or
-Windows user environment at the last check on October 14, 2026. No batch was created.
-Offline success must not be read as provider compatibility.
+Executed **October 14, 2026, 13:55:17 UTC** against revision
+`dc366be3bf7639cab58d4b5d13362db15903524d` using the existing REST adapter.
 
-## Approved bounded protocol
+**Result: complete.** One creation attempt, two public URLs, two successful
+Markdown retrievals, zero failed/unresolved items, zero retries. No adapter
+changes were needed for this observed lifecycle.
 
-- One batch, at most two permitted public URLs, existing credits only.
-- No credit purchase, automatic second submission or retry of batch creation.
-- Use `https://example.com` and `https://www.iana.org/help/example-domains`.
-- Save the minimal checkpoint immediately after acceptance. Keep raw reports local
-  in the ignored output directory; never publish the key or unreviewed payloads.
-- Request page size 1 to exercise actual cursor pagination if the API honors it.
-- Bound polling/retrieval to 600 seconds. If waiting expires, resume the saved
-  batch, never create a replacement automatically.
-- Compare accepted batch ID, lifecycle status, totals, item identities, cursors,
-  retrieve IDs and nonempty Markdown with the documented contract.
-- Record returned credits/cost as provider-reported only when present and valid.
-  Do not estimate missing usage or infer it from the number of pages.
+## Scope and results
 
-## Report after execution
+| Check | Observed result | Boundary |
+|---|---|---|
+| Creation | One POST accepted; batch ID checkpoint saved before polling | No automatic creation retry or second batch |
+| Polling | Four reads; in_progress followed by completed | Other lifecycle/failure states remain fixture-tested |
+| Pagination | limit=1 returned one item and integer cursor; next page returned one item without cursor | Real cursor traversal verified for two completed items |
+| Failed inventory | Empty list | Does not validate a real failed-item response |
+| Identity | page-2 arrived before page-1; both matched original manifest; provider total=2 | Ordering is not assumed |
+| Retrieval | Two nonempty Markdown strings: 1,076 and 974 characters | Availability and basic content inspection, not general extraction accuracy |
+| Usage | credits_consumed=null and cost_usd=null in Batch Info | Unknown, not zero; no billing amount inferred |
+| Duration | 11.1576 seconds local elapsed; ten total HTTP calls | One observation, not a service benchmark |
 
-Record UTC execution time, sanitized response-field/type observations, requested
-and observed item counts, whether pagination actually occurred, content checks,
-usage-field presence, any contract differences, and explicit pass/fail/unknown for
-each check. Redact operational IDs and sensitive fields from public evidence.
-A two-page compatibility check cannot establish load, reliability, production
-adoption, extraction accuracy, webhook delivery or general billing behavior.
+Submitted URLs were `https://example.com` and
+`https://www.iana.org/help/example-domains`. The first returned URL normalized to
+`https://example.com/`; reconciliation uses the original custom IDs rather than
+raw URL string equality. Retrieved content was inspected for the expected example
+domain material. Example domains are documentation examples, not dependable load-test
+or monitoring targets; this was a single compatibility check.
+
+The dashboard showed 500 unused credits before execution. No purchase, card entry,
+subscription or top-up was performed. A post-run account balance has not been
+verified, and the batch response did not provide a usage measurement.
+
+## Contract observations
+
+- Creation returned string `id` and `status`, integer totals, and additional fields
+  safely ignored by the adapter.
+- Batch Info returned integer `total_urls`/`completed_urls`, and `completed_at`
+  changed from null to an integer. Usage fields remained null.
+- Item records contained string `custom_id`, `retrieve_id` and `url`.
+- Retrieval returned string `markdown_content`, boolean `success` and
+  `size_exceeded`, plus optional hosted-content fields. No hosted URL was followed.
+- Terminal pagination omitted `cursor`, which the existing adapter accepts.
+
+See [sanitized summary](../reports/live-compatibility/summary.json) and
+[response field/type observations](../reports/live-compatibility/response-shapes.json).
+Operational IDs, credentials, raw content, checkpoint locations and hosted-content
+URLs are excluded from public evidence. Raw local reports remain Git-ignored.
+
+## What this does not prove
+
+The nine failure scenarios are still offline simulations. This run does not
+establish production adoption, general reliability, concurrency behavior, credit
+pricing, extraction accuracy, public webhook authentication/delivery or exactly-once
+side effects. The browser walkthrough intentionally remains in fixture mode.
 
 Sources: [Batch information](https://docs.olostep.com/api-reference/batches/info),
 [Batch items](https://docs.olostep.com/api-reference/batches/items),
