@@ -125,3 +125,7 @@ one complete integration before adding another API surface.
 MIT License · Amy V · [GitHub](https://github.com/Amyvdev1) ·
 [Portfolio](https://amy-villa-signal-gallery.vercel.app/) ·
 [Writing](https://medium.com/@amyv.dev)
+
+## Writing collection
+
+[Read the three companion articles and download their designed PDFs](articles/README.md). The portfolio brings the writing, source, evidence and music-backed walkthrough together.
