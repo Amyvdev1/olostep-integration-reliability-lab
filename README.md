@@ -1,3 +1,17 @@
+# Olostep Integration Reliability Lab — Async Batch & Fault-Recovery Harness
+**Stack:** Python • Async HTTP • Pydantic/Schema Validation • Pytest | **Verification:** 9 Deterministic Offline Failure Scenarios + Sanitized Live Compatibility Checks
+
+### Architectural Overview
+In asynchronous batch pipelines, an HTTP `200 OK` or `"status": "completed"` flag frequently masks partial dataset corruption, truncated pagination, or silent item-level timeouts. This repository implements a deterministic fault-recovery harness that validates completeness at the record level before committing state transitions.
+
+### Core Reliability Capabilities
+- **Completeness Verification ("When Completed Is Not Complete"):** Separates transport-level batch completion from item-level schema and payload integrity.
+- **Deterministic Polling & Backoff:** Bounded polling state machine with jitter, timeout escalation, and dead-letter quarantine.
+- **Idempotent Partial Retry:** Re-queues only failed or corrupted batch items without duplicating previously committed records.
+
+
+---
+
 # Olostep Integration Reliability Lab
 
 **A completed operation is not necessarily a complete dataset.**
